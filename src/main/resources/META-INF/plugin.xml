@@ -1,0 +1,34 @@
+<idea-plugin>
+    <id>com.qmui.Svg2Vector</id>
+    <name>Svg2Vector</name>
+    <version>1.0</version>
+    <vendor url="https://github.com/QMUI">QMUI</vendor>
+
+    <description><![CDATA[
+      convert svg to vector drawable.<br>
+    ]]></description>
+
+    <change-notes><![CDATA[
+      1.0<br>
+      <ul>
+        <li>support name prefix</li>
+        <li>support convert in batch</li>
+      </ul>
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="162"/>
+
+    <!--<extensions defaultExtensionNs="com.intellij">
+        <applicationConfigurable instance="SvgSettings"/>
+    </extensions>-->
+
+    <actions>
+        <action id="Svg2Vector.Action" class="Action.Svg2VectorAction" text="Svg2Vector" description="Svg2Vector">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </action>
+    </actions>
+
+
+</idea-plugin>
