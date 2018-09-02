@@ -4,12 +4,14 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import com.jgoodies.common.base.Strings;
 import org.intellij.images.fileTypes.impl.SvgFileType;
 import utils.Configuration;
 
@@ -78,7 +80,7 @@ public class GenerateVectorDialog extends JDialog {
         // add your code here
         Svg2VectorHelper helper = new Svg2VectorHelper(mProject);
         apply();
-        helper.convertSvgToVector(Paths.get(getSource()), Paths.get(getTargetPath()), getPrefix());
+        helper.convertSvgToVector(getSource(), Paths.get(getTargetPath()), getPrefix());
     }
 
     private void apply() {
@@ -119,29 +121,41 @@ public class GenerateVectorDialog extends JDialog {
         sourceSelectBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showFileChooser(sourcePathField, true);
+                showFileChooser(sourcePathField);
             }
         });
 
         targetSelectBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showFileChooser(targetPathField, false);
+
+                FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+                VirtualFile virtualFile = FileChooser.chooseFile(descriptor, ProjectUtil.guessCurrentProject(targetPathField), null);
+                if(virtualFile != null && virtualFile.isDirectory()) {
+                    targetPathField.setText(virtualFile.getCanonicalPath());
+                    checkOkButtonStatus();
+                }
+
+
             }
         });
     }
 
-    private void showFileChooser(JTextField textField, boolean svg) {
-        FileChooserDescriptor descriptor = svg ?
-                FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor(SvgFileType.INSTANCE) :
-                FileChooserDescriptorFactory.createSingleFolderDescriptor();
-        VirtualFile virtualFile = FileChooser.chooseFile(descriptor, ProjectUtil.guessCurrentProject(textField), null);
-        if (virtualFile != null && (
-                (svg && (virtualFile.isDirectory() || virtualFile.getFileType() == SvgFileType.INSTANCE)) ||
-                (!svg && virtualFile.isDirectory())
-                )) {
-            textField.setText(virtualFile.getCanonicalPath());
+    private void showFileChooser(JTextField textField) {
 
+        FileChooserDescriptor descriptor = new FileChooserDescriptor(true, true, false, false, false, true)
+                .withFileFilter(file -> file.getFileType() == SvgFileType.INSTANCE);
+        VirtualFile[] virtualFiles = FileChooser.chooseFiles(descriptor, ProjectUtil.guessCurrentProject(textField), null);
+
+        String path = "";
+        for (VirtualFile virtualFile: virtualFiles) {
+            if(virtualFile == null) return ;
+            if(virtualFile.getCanonicalPath() != null) {
+                path += virtualFile.getCanonicalPath() + (virtualFiles[virtualFiles.length - 1].equals(virtualFile) ? "" : ";");
+            }
+        }
+        if(Strings.isNotEmpty(path)){
+            textField.setText(path);
             checkOkButtonStatus();
         }
     }

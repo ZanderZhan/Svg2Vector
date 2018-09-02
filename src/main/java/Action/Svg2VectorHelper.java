@@ -4,16 +4,13 @@ import UI.GenerateResult;
 import com.android.ide.common.vectordrawable.Svg2Vector;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.io.PathKt;
+import com.sun.jna.StringArray;
 import utils.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileVisitOption;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -33,14 +30,21 @@ public class Svg2VectorHelper {
         mSkipList = new ArrayList<String>();
     }
 
-    public void convertSvgToVector(Path svgPath, Path targetPath, String prefix) {
+    public void convertSvgToVector(String svgPath, Path targetPath, String prefix) {
 
         mPrefix = prefix;
-        if (checkPath(svgPath)) {
-            iterateDirectory(svgPath, targetPath);
-        } else {
-            convert(svgPath, targetPath);
+        String[] sourcePaths = svgPath.split(";");
+        for (String sourcePath : sourcePaths) {
+            Path path = Paths.get(sourcePath);
+            if(path != null) {
+                if (checkPath(path)) {
+                    iterateDirectory(path, targetPath);
+                } else {
+                    convert(path, targetPath);
+                }
+            }
         }
+
     }
 
     private void convert(Path file, Path targetPath) {
