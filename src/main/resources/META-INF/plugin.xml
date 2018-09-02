@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.qmui.Svg2Vector</id>
     <name>Svg2Vector</name>
-    <version>1.0</version>
+    <version>1.2</version>
     <vendor url="https://github.com/QMUI">QMUI</vendor>
 
     <description><![CDATA[
@@ -9,10 +9,18 @@
     ]]></description>
 
     <change-notes><![CDATA[
-      1.0<br>
+      <b>1.0</b><br>
       <ul>
         <li>support name prefix</li>
         <li>support convert in batch</li>
+      </ul>
+      <b>1.1</b><br>
+      <ul>
+        <li>support multiple files selection</li>
+      </ul>
+      <b>1.2</b><br>
+      <ul>
+        <li>add plugin change notes</li>
       </ul>
     ]]>
     </change-notes>

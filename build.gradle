@@ -16,7 +16,7 @@ plugins {
 }
 
 group 'com.qmui'
-version '1.0'
+version '1.2'
 
 apply plugin: 'java'
 apply plugin: 'org.jetbrains.intellij'
@@ -36,10 +36,5 @@ dependencies {
 
 intellij {
     version '2017.3.2'
-}
-patchPluginXml {
-    changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
 }
 
